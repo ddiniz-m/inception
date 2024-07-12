@@ -1,0 +1,9 @@
+
+version : ''
+services :
+  web:
+    image: nginx
+    env_file: ".env"
+
+  db:
+    image: mariadb
