@@ -1,0 +1,53 @@
+
+services:
+  wordpress:
+    build: ./requirements/wordpress/.
+    container_name: wp-php
+    # depends_on:
+    #   - mariadb
+    environment:
+      WP_HOME: https://localhost:8080
+    volumes:
+      - ./web:/var/www/html
+    ports:
+      - "8080:80"
+
+  nginx:
+    build: ./requirements/nginx/.
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./web:/var/www/html
+    depends_on:
+      - wordpress
+
+  mariadb:
+    build: ./requirements/mariadb/.
+
+
+
+
+
+# Services:
+  # Defines different containers that make up application
+
+  # Build:
+  # Specifies where build should be searching for dockerfile and what is the name of the file. 
+  # In this case, context and dockerfile is not needed beacuse dockerfile is called Dockerfile.
+  # However, its good practice for more complex projects.
+
+  # Environment:
+  # Defines env variables to configure each container.
+
+  # Volumes:
+  # Maps a data directory or configuration file to the container.
+
+  # Depends on X:
+  # Ensures that X is stared before this container
+
+  # Ports:
+  # Exposes container on the port on local machine
+
+# Volumes:
+  # Defines names volumes that persist data between container restarts
