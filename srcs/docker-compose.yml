@@ -1,19 +1,31 @@
 
 services:
+  mariadb:
+    build:
+      context: ./requirements/mariadb/.
+      dockerfile: Dockerfile
+    container_name: mariadb
+    volumes:
+      - ./database:/var/lib/mysql
+    networks:
+      inception:
+
   wordpress:
-    build: ./requirements/wordpress/.
+    build: 
+      context: ./requirements/wordpress/.
+      dockerfile: Dockerfile
     container_name: wp-php
-    # depends_on:
-    #   - mariadb
-    environment:
-      WP_HOME: https://localhost:8080
+    depends_on:
+      - mariadb
     volumes:
       - ./web:/var/www/html
-    ports:
-      - "8080:80"
+    networks:
+      inception:
 
   nginx:
-    build: ./requirements/nginx/.
+    build:
+      context: ./requirements/nginx/.
+      dockerfile: Dockerfile
     container_name: nginx
     ports:
       - "80:80"
@@ -21,9 +33,14 @@ services:
       - ./web:/var/www/html
     depends_on:
       - wordpress
+      - mariadb
+    networks:
+      inception:
 
-  mariadb:
-    build: ./requirements/mariadb/.
+networks:
+  inception:
+
+# volumes:
 
 
 

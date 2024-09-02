@@ -2,12 +2,25 @@
 
 FROM debian:bullseye
 
-RUN apt update && apt install -y php-fpm
+#php-mysqli is needed to give php access to our database
+#curl is needed to download the sript for installing the worpress website
+RUN apt update && apt upgrade -y && apt install -y \
+	curl \
+	php-fpm \
+	php-mysqli
+
+RUN mkdir -p /run/php
 
 COPY www.conf /etc/php/7.4/fpm/pool.d/.
+COPY wp_conf.sh /home
+COPY wp-config.php /home
 
-# WORKDIR /var/www/html
+RUN chmod 777 /home/wp_conf.sh
 
-# EXPOSE 8080
+EXPOSE 9000
 
-CMD ["php-fpm7.4", "-F"]
+LABEL description = "WordPress!"
+
+ENTRYPOINT [ "/home/wp_conf.sh" ]
+
+CMD ["php-fpm7.4 -F"]

@@ -2,11 +2,13 @@
 
 FROM debian:bullseye
 
-RUN apt update && apt install -y nginx
+RUN apt update && apt upgrade -y && apt install -y nginx
 
 COPY default /etc/nginx/sites-available/.
 
 EXPOSE 8080
+
+LABEL description = "Engine X!"
 
 CMD [ "nginx", "-g", "daemon off;" ]
 
