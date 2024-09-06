@@ -6,24 +6,24 @@ wp_download()
 	wp core download --allow-root
 }
 
-config_create()
-{
-	echo "2"
-	wp config create \
-		--allow-root \
-		--path=/var/www/html/ \
-		--dbname=$DB_NAME \
-		--dbuser=$DB_USER \
-		--dbpass=$DB_PASSWORD \
-		--dbhost=$DB_HOST
-}
+# config_create()
+# {
+# 	echo "2"
+# 	wp config create \
+# 		--allow-root \
+# 		--path=/var/www/html/ \
+# 		--dbname=$MYSQL_DATABASE \
+# 		--dbuser=$MYSQL_USER \
+# 		--dbpass=$MYSQL_PASSWORD \
+# 		--dbhost=$MYSQL_HOST
+# }
 
 install()
 {
 	echo "3"
 	wp core install \
 		--allow-root \
-		--url=$WP_URL \
+		--url=$WP_URL/ \
 		--title=$WP_TITLE \
 		--admin_user=$WP_ADMIN_USER \
 		--admin_password=$WP_ADMIN_PW \
@@ -36,33 +36,33 @@ user_create()
 	wp user create \
 		--allow-root \
 		$WP_USER $WP_USER_EMAIL \
-		--user_pass=$WP_USER_PASS
+		--user_pass=$WP_USER_PASS \
+		--role=author
 }
 
-funcs=( config_create install user_create )
-
-wp_download
-
-if [ ! -f /var/www/html/wp-config.php ]
+if [ ! -f wp-config.php ]
 then
+	wp_download
 
-	mv /var/www/html/wp-config-sample.php /var/www/html/wp-config.php
-	chmod 777 /var/www/html/wp-config.php
+	mv wp-config-sample.php wp-config.php
+	chmod 755 wp-config.php
 
-	sed -i -r "s/database_name_here/$DB_NAME/1" /var/www/html/wp-config.php
-	sed -i -r "s/username_here/$DB_USER/1" /var/www/html/wp-config.php
-	sed -i -r "s/password_here/$DB_PASSWORD/1" /var/www/html/wp-config.php
-	sed -i -r "s/localhost/$DB_HOST/1" /var/www/html/wp-config.php
+	sed -i -r "s/database_name_here/$MYSQL_DATABASE/1" wp-config.php
+	sed -i -r "s/username_here/$MYSQL_USER/1" wp-config.php
+	sed -i -r "s/password_here/$MYSQL_PASSWORD/1" wp-config.php
+	sed -i -r "s/localhost/$MYSQL_HOST/1" wp-config.php
 
-	chown -R www-data:www-data /var/www/html/wp-config.php
-	chmod 640 wp-config.php
+	echo "$MYSQL_HOST, $MYSQL_USER, $MYSQL_PASSWORD"
 
-	for run in "${funcs[@]}"
-	do
-		$run
-	done
+	# config_create
+	install
+	user_create
+
+	wp option update home "https://$WP_URL" --allow-root
+	wp option update siteurl "https://$WP_URL" --allow-root
+
 else
 	echo "Wordpress is already installed and configured!"
 fi
 
-exec php-fpm7.4 -R -F
+exec $@

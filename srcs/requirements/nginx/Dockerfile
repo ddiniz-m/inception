@@ -5,7 +5,7 @@ FROM debian:bullseye
 RUN apt update && apt upgrade -y && apt install -y nginx openssl
 RUN mkdir -p /run/nginx
 
-COPY nginx.conf /etc/nginx/sites-available/default
+COPY nginx.conf /etc/nginx/sites-available/
 
 WORKDIR /etc/nginx/tls
 

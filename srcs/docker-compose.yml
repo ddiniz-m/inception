@@ -6,12 +6,13 @@ services:
       dockerfile: Dockerfile
     container_name: mariadb
     volumes:
-      - maridb:/var/lib/mysql
-    networks:
-      - inception-nw
+      - mariadb-data:/var/lib/mysql
+      - mariadb-run:/var/run/mysqld
     # restart: always
     env_file:
       - .env
+    networks:
+      - inception-nw
 
   wordpress:
     build: 
@@ -22,11 +23,11 @@ services:
       - mariadb
     volumes:
       - wordpress:/var/www/html
-    networks:
-      - inception-nw
     # restart: always
     env_file:
       - .env
+    networks:
+      - inception-nw
 
   nginx:
     build:
@@ -39,21 +40,23 @@ services:
       - wordpress:/var/www/html
     depends_on:
       - wordpress
+    # restart: always
     networks:
       - inception-nw
-    # restart: always
 
 networks:
   inception-nw:
     driver: bridge
 
 volumes:
-  maridb:
-      driver: local
-      driver_opts:
-        type: none
-        device: /home/ddiniz-m/data/mariadb
-        o: bind
+  mariadb-data:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/ddiniz-m/data/mariadb
+      o: bind
+  mariadb-run:
+    driver: local
   wordpress:
     driver: local
     driver_opts:

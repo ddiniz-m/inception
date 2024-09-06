@@ -6,14 +6,13 @@ FROM debian:bullseye
 #curl is needed to download the sript for installing the worpress website
 RUN apt update && apt upgrade -y && apt install -y \
 	curl \
-	wget \
-	php-fpm \
-	php-mysql \
-	php-mysqli
+	nano \
+    php7.4-fpm \
+    php7.4-mysql
 
 # Intallation of wp-cli. wp-cli is the command-line interface for WordPress.
 RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
-	&& chmod 777 wp-cli.phar \
+	&& chmod 755 wp-cli.phar \
 	&& mv wp-cli.phar /usr/local/bin/wp
 
 RUN mkdir -p /run/php \
@@ -23,7 +22,7 @@ COPY www.conf /etc/php/7.4/fpm/pool.d/www.conf
 COPY wp_conf.sh /usr/local/bin/
 COPY index.html /var/www/html
 
-RUN chmod 777 /usr/local/bin//wp_conf.sh
+RUN chmod 755 /usr/local/bin/wp_conf.sh
 
 EXPOSE 9000
 
@@ -33,4 +32,4 @@ WORKDIR /var/www/html
 
 ENTRYPOINT [ "/usr/local/bin/wp_conf.sh" ]
 
-# CMD ["php-fpm7.4" "-F" "-R"]
+CMD [ "/usr/sbin/php-fpm7.4 -F -R" ]

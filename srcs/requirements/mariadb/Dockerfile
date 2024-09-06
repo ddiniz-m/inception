@@ -2,14 +2,21 @@
 
 FROM debian:bullseye
 
-RUN apt update && apt upgrade -y && apt install -y mariadb-server nano
+RUN apt update && apt upgrade -y && apt install -y --fix-broken --fix-missing \
+	mariadb-server \
+	nano
 
-COPY 50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
-COPY init.sql /etc/mysql/init.sql
+COPY 99-my.cnf /etc/mysql/mariadb.conf.d/
+COPY init.sql /usr/local/bin/init.sql
 COPY mdb-conf.sh /usr/local/bin/
 
 RUN mkdir /var/run/mysqld \
-	&& chmod 777 /usr/local/bin/mdb-conf.sh
+	&& chown mysql:mysql /var/run/mysqld \
+	&& chmod 755 /usr/local/bin/mdb-conf.sh \
+	&& chmod 644 /etc/mysql/mariadb.conf.d/99-my.cnf
+
+RUN chown -R mysql:mysql /var/lib/mysql \
+	&& chmod -R 755 /var/lib/mysql
 
 EXPOSE 3306
 

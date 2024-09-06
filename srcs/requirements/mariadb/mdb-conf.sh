@@ -1,15 +1,14 @@
 #!/bin/bash
 
-if [ ! -d "/var/lib/mysql/$DB_NAME" ]; then
+mysqld_safe --skip-networking &
 
-	mysqld --initialize-insecure
+sleep 3
 
-	mysqld -u root -p $DB_PASS < /etc/mysql/init.sql
+if [ ! -d "/var/lib/mysql/$MYSQL_DATABASE" ]; then
 
-	mysqadmin shutdown
+	echo "Setting up MYSQL!!!"
+	mysql -u root -p $MYSQL_PASSWORD < /usr/local/bin/init.sql
 
 else
 	echo "MariaDB already configured!"
 fi
-
-exec mysqld_safe
