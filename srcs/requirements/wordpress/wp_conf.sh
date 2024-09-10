@@ -6,17 +6,18 @@ wp_download()
 	wp core download --allow-root
 }
 
-# config_create()
-# {
-# 	echo "2"
-# 	wp config create \
-# 		--allow-root \
-# 		--path=/var/www/html/ \
-# 		--dbname=$MYSQL_DATABASE \
-# 		--dbuser=$MYSQL_USER \
-# 		--dbpass=$MYSQL_PASSWORD \
-# 		--dbhost=$MYSQL_HOST
-# }
+config_create()
+{
+	echo "2"
+	wp config create \
+		--path=/var/www/html/ \
+		--dbname=$MYSQL_DATABASE \
+		--dbuser=$MYSQL_USER \
+		--dbpass=$MYSQL_PASSWORD \
+		--dbhost=mariadb:3306 \
+		--allow-root \
+		--force
+}
 
 install()
 {
@@ -43,18 +44,7 @@ user_create()
 if [ ! -f wp-config.php ]
 then
 	wp_download
-
-	mv wp-config-sample.php wp-config.php
-	chmod 755 wp-config.php
-
-	sed -i -r "s/database_name_here/$MYSQL_DATABASE/1" wp-config.php
-	sed -i -r "s/username_here/$MYSQL_USER/1" wp-config.php
-	sed -i -r "s/password_here/$MYSQL_PASSWORD/1" wp-config.php
-	sed -i -r "s/localhost/$MYSQL_HOST/1" wp-config.php
-
-	echo "$MYSQL_HOST, $MYSQL_USER, $MYSQL_PASSWORD"
-
-	# config_create
+	config_create
 	install
 	user_create
 

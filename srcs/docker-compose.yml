@@ -6,8 +6,7 @@ services:
       dockerfile: Dockerfile
     container_name: mariadb
     volumes:
-      - mariadb-data:/var/lib/mysql
-      - mariadb-run:/var/run/mysqld
+      - mariadb:/var/lib/mysql
     # restart: always
     env_file:
       - .env
@@ -49,14 +48,12 @@ networks:
     driver: bridge
 
 volumes:
-  mariadb-data:
+  mariadb:
     driver: local
     driver_opts:
       type: none
       device: /home/ddiniz-m/data/mariadb
       o: bind
-  mariadb-run:
-    driver: local
   wordpress:
     driver: local
     driver_opts:

@@ -1,14 +1,26 @@
 #!/bin/bash
 
-mysqld_safe --skip-networking &
+mysqld_safe &
 
-sleep 3
+while ! mysqladmin ping --silent; do
+    echo "Waiting for MariaDB to start..."
+    sleep 2
+done
 
 if [ ! -d "/var/lib/mysql/$MYSQL_DATABASE" ]; then
 
 	echo "Setting up MYSQL!!!"
-	mysql -u root -p $MYSQL_PASSWORD < /usr/local/bin/init.sql
 
+	envsubst < init.sql > tmp.sql
+	cat tmp.sql
+
+	echo "
+	"
+
+	mysql < tmp.sql
+	
 else
 	echo "MariaDB already configured!"
 fi
+
+wait
