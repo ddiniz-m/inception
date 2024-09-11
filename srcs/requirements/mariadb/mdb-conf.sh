@@ -12,12 +12,8 @@ if [ ! -d "/var/lib/mysql/$MYSQL_DATABASE" ]; then
 	echo "Setting up MYSQL!!!"
 
 	envsubst < init.sql > tmp.sql
-	cat tmp.sql
 
-	echo "
-	"
-
-	mysql < tmp.sql
+	mysql -u root < tmp.sql
 	
 else
 	echo "MariaDB already configured!"
