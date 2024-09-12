@@ -2,13 +2,11 @@
 
 wp_download()
 {
-	echo "1"
 	wp core download --allow-root
 }
 
 config_create()
 {
-	echo "2"
 	wp config create \
 		--path=/var/www/html/ \
 		--dbname=$MYSQL_DATABASE \
@@ -21,7 +19,6 @@ config_create()
 
 install()
 {
-	echo "3"
 	wp core install \
 		--allow-root \
 		--url=$WP_URL/ \
@@ -33,7 +30,6 @@ install()
 
 user_create()
 {
-	echo "4"
 	wp user create \
 		--allow-root \
 		$WP_USER $WP_USER_EMAIL \

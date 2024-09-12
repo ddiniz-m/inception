@@ -7,9 +7,9 @@ services:
     container_name: mariadb
     volumes:
       - mariadb:/var/lib/mysql
-    # restart: always
+    restart: always
     env_file:
-      - .env
+      - .env.secrets
     networks:
       - inception-nw
 
@@ -22,9 +22,9 @@ services:
       - mariadb
     volumes:
       - wordpress:/var/www/html
-    # restart: always
+    restart: always
     env_file:
-      - .env
+      - .env.secrets
     networks:
       - inception-nw
 
@@ -39,7 +39,7 @@ services:
       - wordpress:/var/www/html
     depends_on:
       - wordpress
-    # restart: always
+    restart: always
     networks:
       - inception-nw
 
@@ -60,6 +60,34 @@ volumes:
       type: none
       device: /home/ddiniz-m/data/wordpress
       o: bind
+
+secrets:
+  MYSQLROOTUSER:
+    external: true
+  MYSQLROOTPASSWORD:
+    external: true
+  MYSQLDATABASE:
+    external: true
+  MYSQLUSER:
+    external: true
+  MYSQLPASSWORD:
+    external: true
+  WPURL:
+    external: true
+  WPTITLE:
+    external: true
+  WPADMINUSER:
+    external: true
+  WPADMINPW:
+    external: true
+  WPADMINEMAIL:
+    external: true
+  WPUSER:
+    external: true
+  WPUSERPASS:
+    external: true
+  WPUSEREMAIL:
+    external: true
 
 
 

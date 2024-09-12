@@ -15,8 +15,6 @@ RUN openssl req -x509 -sha256 -nodes -newkey rsa:2048 -days 365 \
 
 EXPOSE 443
 
-LABEL description = "Engine X!"
-
 CMD [ "nginx", "-g", "daemon off;" ]
 
 # -g makes it so nginx runs in the foreground

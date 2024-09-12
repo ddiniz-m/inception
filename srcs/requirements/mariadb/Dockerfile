@@ -2,6 +2,7 @@
 
 FROM debian:bullseye
 
+#gettext for envsubst
 RUN apt update && apt upgrade -y && apt install -y \
 	mariadb-server \
 	nano \
@@ -12,16 +13,16 @@ COPY init.sql /usr/local/bin/init.sql
 COPY mdb-conf.sh /usr/local/bin/
 
 RUN mkdir /var/run/mysqld
-RUN chown mysql:mysql /var/run/mysqld
-RUN chmod 755 /usr/local/bin/mdb-conf.sh
-RUN chmod 755 /etc/mysql/mariadb.conf.d/50-server.cnf
 
-RUN chown -R mysql:mysql /var/lib/mysql \
+#Chown: Changes owner and/or group of folder/file. chown OWNER:GROUP FILE
+RUN chown mysql:mysql /var/run/mysqld \
+	&& chown -R mysql:mysql /var/lib/mysql
+
+RUN chmod 755 /usr/local/bin/mdb-conf.sh \
+	&& chmod 755 /etc/mysql/mariadb.conf.d/50-server.cnf \
 	&& chmod -R 755 /var/lib/mysql
 
 EXPOSE 3306
-
-LABEL description = "MariaDB!"
 
 WORKDIR /usr/local/bin
 
