@@ -17,7 +17,7 @@ services:
     build: 
       context: ./requirements/wordpress/.
       dockerfile: Dockerfile
-    container_name: wp-php
+    container_name: wordpress
     depends_on:
       - mariadb
     volumes:
@@ -27,8 +27,6 @@ services:
       - .env.secrets
     networks:
       - inception-nw
-    secrets:
-      - 
 
   nginx:
     build:
