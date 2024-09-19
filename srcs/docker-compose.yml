@@ -27,6 +27,8 @@ services:
       - .env.secrets
     networks:
       - inception-nw
+    secrets:
+      - 
 
   nginx:
     build:
@@ -88,9 +90,6 @@ secrets:
     external: true
   WPUSEREMAIL:
     external: true
-
-
-
 
 # Services:
   # Defines different containers that make up application
